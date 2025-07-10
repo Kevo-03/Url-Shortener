@@ -3,7 +3,7 @@ import { UrlsController } from './urls.controller';
 import { UrlsService } from './urls.service';
 import { ShortenController } from './controller/shorten.controller';
 import { RedirectController } from './controller/redirect.controller';
-import { UrlsRepository } from './urls.repository';
+import { UrlsRepository } from './repository/urls.repository';
 
 @Module({
     controllers: [UrlsController, ShortenController, RedirectController],

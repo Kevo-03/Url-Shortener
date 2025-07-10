@@ -1,5 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
-import { UrlsRepository } from './urls.repository';
+import { UrlsRepository } from './repository/urls.repository';
 import { nanoid } from 'nanoid'
 
 const CODE_LEN = 7
