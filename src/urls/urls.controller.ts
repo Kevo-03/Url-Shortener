@@ -8,10 +8,9 @@ export class UrlsController {
     @Post()
     async write(
         @Body('key') key: string,
-        @Body('value') value: string,
-        @Body('ttl') ttl?: number, // optional
+        @Body('value') value: string
     ) {
-        await this.urlsService.set(key, value, ttl);
+        await this.urlsService.set(key, value);
         return { ok: true };
     }
 

@@ -1,18 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-modules/ioredis';
-import { Redis } from 'ioredis';
+import { UrlsRepository } from './urls.repository';
 
 @Injectable()
 export class UrlsService {
-    constructor(@InjectRedis() private readonly redis: Redis) { }
+    constructor(private repo: UrlsRepository) { }
 
-    async set(key: string, value: string, ttl = 60): Promise<'OK'> {
-        // EX = seconds; PX = ms
-        return this.redis.set(key, value, 'EX', ttl);
+    async set(key: string, value: string): Promise<'OK'> {
+        return this.repo.save(key, value);
     }
 
     /** get a key (or null if missing) */
     async get(key: string): Promise<string | null> {
-        return this.redis.get(key);
+        return this.repo.get(key);
     }
 }
