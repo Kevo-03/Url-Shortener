@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Param, Query, Body } from '@nestjs/common';
-import { UrlsService } from './urls.service';
+import { UrlsService } from '../urls.service';
 
 @Controller('cache')
 export class UrlsController {
