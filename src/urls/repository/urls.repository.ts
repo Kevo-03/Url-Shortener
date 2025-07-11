@@ -12,11 +12,11 @@ export class UrlsRepository {
         return this.redis.set(code, longUrl, 'EX', SHORT_URL_TTL);
     }
 
-    async get(code: string): Promise<string | null> {
+    async get(code: string) {
         return this.redis.get(code);
     }
 
-    async exists(code: string): Promise<boolean> {
+    async exists(code: string) {
         return (await this.redis.exists(code)) === 1;
     }
 }
