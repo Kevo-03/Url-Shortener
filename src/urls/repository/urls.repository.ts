@@ -20,4 +20,9 @@ export class UrlsRepository {
     async exists(code: string) {
         return (await this.redis.exists(code)) === 1;
     }
+
+    async saveIfUnique(code: string, longUrl: string) {
+        const ok = await this.redis.set(code, longUrl, 'EX', 60 * 60 * 24 * 30, 'NX');
+        return ok === 'OK';
+    }
 }
