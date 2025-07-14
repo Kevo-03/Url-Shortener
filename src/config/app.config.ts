@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-dotenv.config({ path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env' });
+dotenv.config({ path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env.development' });
 
 function toNumber(val: string | undefined, fallback: number): number {
     const n = Number(val);
@@ -19,4 +19,6 @@ export const ENV_VAR = {
     BASE_URL: process.env.BASE_URL ?? 'http://localhost:3000',
     CODE_LEN: toNumber(process.env.CODE_LEN, 7),
     MAX_ATTEMPTS: toNumber(process.env.MAX_ATTEMPTS, 3),
+    BASIC_AUTH_USER: process.env.BASIC_AUTH_USER,
+    BASIC_AUTH_PASS: process.env.BASIC_AUTH_PASS,
 }
