@@ -4,17 +4,18 @@ import { nanoid } from 'nanoid'
 
 const CODE_LEN = 7
 const MAX_ATTEMPTS = 3
+const SHORT_URL_TTL = 60 * 60 * 24 * 30;
 
 @Injectable()
 export class UrlsService {
     private readonly logger = new Logger(UrlsService.name);
     constructor(private repo: UrlsRepository) { }
 
-    async shorten(longUrl: string) {
+    async shorten(longUrl: string, ttl = SHORT_URL_TTL) {
         for (let i = 0; i < MAX_ATTEMPTS; i++) {
             const code = nanoid(CODE_LEN);
-            if (await this.repo.saveIfUnique(code, longUrl)) {
-                this.logger.debug(`Mapped ${code} → ${longUrl}`);
+            if (await this.repo.saveIfUnique(code, longUrl, ttl)) {
+                this.logger.debug(`Mapped ${code} (${ttl}s) → ${longUrl}`);
                 return code;
             }
         }
