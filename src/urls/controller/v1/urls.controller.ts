@@ -2,8 +2,9 @@ import { Controller, Get, Post, Body, Param, NotFoundException, Res, Version } f
 import { UrlsService } from 'src/urls/urls.service';
 import { Response } from 'express';
 import { CreateUrlDto } from 'src/urls/dto/create-url.dto';
+import { ENV_VAR } from 'src/config/app.config';
 
-const BASE_URL = process.env.BASE_URL ?? 'http://localhost:3000';
+const BASE_URL = ENV_VAR.BASE_URL;
 
 @Controller()
 export class UrlsControllerV1 {
