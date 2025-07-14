@@ -22,7 +22,7 @@ export class UrlsControllerV1 {
     @Version('1')
     @Post('shorten')
     async shorten(@Body() body: CreateUrlDto) {
-        const shortCode = await this.urlsService.shorten(body.url);
+        const shortCode = await this.urlsService.shorten(body.url, body.ttl);
         return { shortUrl: `${BASE_URL}/${shortCode}`, shortCode };
     }
 }

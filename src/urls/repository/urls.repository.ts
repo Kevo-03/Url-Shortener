@@ -3,14 +3,13 @@ import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Redis } from 'ioredis';
 
 //hem default değer hem env (isteğe göre overwrite)
-const SHORT_URL_TTL = 60 * 60 * 24 * 30;
 
 @Injectable()
 export class UrlsRepository {
     constructor(@InjectRedis() private readonly redis: Redis) { }
 
-    async save(code: string, longUrl: string): Promise<'OK'> {
-        return this.redis.set(code, longUrl, 'EX', SHORT_URL_TTL);
+    async save(code: string, longUrl: string, ttl: number): Promise<'OK'> {
+        return this.redis.set(code, longUrl, 'EX', ttl);
     }
 
     async get(code: string) {
@@ -21,8 +20,8 @@ export class UrlsRepository {
         return (await this.redis.exists(code)) === 1;
     }
 
-    async saveIfUnique(code: string, longUrl: string) {
-        const ok = await this.redis.set(code, longUrl, 'EX', 60 * 60 * 24 * 30, 'NX');
+    async saveIfUnique(code: string, longUrl: string, ttl: number) {
+        const ok = await this.redis.set(code, longUrl, 'EX', ttl, 'NX');
         return ok === 'OK';
     }
 }
