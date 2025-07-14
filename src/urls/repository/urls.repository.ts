@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Redis } from 'ioredis';
 
+//hem default değer hem env (isteğe göre overwrite)
 const SHORT_URL_TTL = 60 * 60 * 24 * 30;
 
 @Injectable()
