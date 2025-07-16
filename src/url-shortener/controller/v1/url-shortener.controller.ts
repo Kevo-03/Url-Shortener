@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Body, Param, NotFoundException, Res, Version, UseGuards } from '@nestjs/common';
-import { UrlsService } from '../../urls.service';
+import { UrlsService } from '../../url-shortener.service';
 import { Response } from 'express';
 import { CreateUrlDto } from '../../dto/create-url.dto';
 import { ENV_VAR } from '../../../config/app.config';

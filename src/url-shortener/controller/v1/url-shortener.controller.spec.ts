@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UrlsControllerV1 } from './urls.controller';
+import { UrlsControllerV1 } from './url-shortener.controller';
 
 describe('UrlsController', () => {
   let controller: UrlsControllerV1;

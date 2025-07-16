@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UrlsService } from './urls.service';
+import { UrlsService } from './url-shortener.service';
 
 describe('UrlsService', () => {
   let service: UrlsService;
