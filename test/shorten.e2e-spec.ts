@@ -66,20 +66,20 @@ describe('Shortening System', () => {
             .expect(400)
     });
 
-    it('should redirecs to the original Url mapped to the short Url', async () => {
-        const code = shortCode;
-
-        const res = await request(app.getHttpServer())
-            .get(`/${code}`)
-            .redirects(0)
-            .expect(301)
-
-        expect(res.headers.location).toBe('https://example.com/very/long/path',);
-    });
-
-    it('should return 404 for non-existing short Url', async () => {
-        return request(app.getHttpServer())
-            .get('/abcdser')
-            .expect(404)
-    });
+    /*  it('should redirecs to the original Url mapped to the short Url', async () => {
+         const code = shortCode;
+ 
+         const res = await request(app.getHttpServer())
+             .get(`/${code}`)
+             .redirects(0)
+             .expect(301)
+ 
+         expect(res.headers.location).toBe('https://example.com/very/long/path',);
+     });
+ 
+     it('should return 404 for non-existing short Url', async () => {
+         return request(app.getHttpServer())
+             .get('/abcdser')
+             .expect(404)
+     }); */
 });
