@@ -1,5 +1,5 @@
 import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
-import { UrlsRepository } from './repository/urls.repository';
+import { UrlsRepository } from './repository/url-shortener.repository';
 import { nanoid } from 'nanoid'
 import { ENV_VAR } from '../config/app.config';
 

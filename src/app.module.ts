@@ -2,7 +2,7 @@ import { Module, ValidationPipe } from '@nestjs/common';
 import { APP_PIPE } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UrlsModule } from './urls/urls.module';
+import { UrlsModule } from './url-shortener/url-shortener.module';
 import { RedisModule, RedisModuleOptions } from '@nestjs-modules/ioredis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { REDIS_CONNECTION_URL } from './config/redis.config';
