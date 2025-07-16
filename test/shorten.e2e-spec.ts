@@ -37,7 +37,7 @@ describe('Shortening System', () => {
             .expect(401);
     });
 
-    it('should create a short code when authenticated', async () => {
+    it('should create a short code and url when authenticated', async () => {
         const res = await request(app.getHttpServer())
             .post('/v1/shorten')
             .auth(USER_NAME!, PASSWORD!)
