@@ -17,7 +17,7 @@ export class UrlsService {
             const code = nanoid(CODE_LEN);
             if (await this.repo.saveIfUnique(code, longUrl, ttl)) {
                 this.logger.debug(`Mapped ${code} (${ttl}s) → ${longUrl}`);
-                return code;
+                return { code, ttl };
             }
         }
 

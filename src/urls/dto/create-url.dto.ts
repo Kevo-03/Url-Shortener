@@ -6,8 +6,7 @@ export class CreateUrlDto {
     url: string;
 
     @IsOptional()
-    @IsOptional()
     @IsInt()
     @Max(60 * 60 * 24 * 90)
-    ttl?: number;
+    ttl: number;
 }
