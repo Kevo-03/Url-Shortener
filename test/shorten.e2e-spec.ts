@@ -37,7 +37,15 @@ describe('Shortening System', () => {
             .expect(401);
     });
 
-    it('should create a short code and url when authenticated', async () => {
+    it('should return 401 if authorization header is not Basic', async () => {
+        return request(app.getHttpServer())
+            .post('/v1/shorten')
+            .set('Authorization', 'Bearer whatever-token')
+            .send({ url: 'https://example.com/very/long/path' })
+            .expect(401);
+    });
+
+    it('should create a short code and url with default ttl when authenticated', async () => {
         const res = await request(app.getHttpServer())
             .post('/v1/shorten')
             .auth(USER_NAME!, PASSWORD!)
@@ -46,6 +54,24 @@ describe('Shortening System', () => {
 
         expect(res.body).toHaveProperty('shortCode');
         expect(res.body).toHaveProperty('shortUrl');
+        expect(res.body).toHaveProperty('ttl');
+        expect(res.body.ttl).toBe(2592000);
+
+        shortCode = res.body.shortCode;
+    });
+
+    it('should create a short code and url with custom ttl when authenticated', async () => {
+        const customTTL = 5000;
+        const res = await request(app.getHttpServer())
+            .post('/v1/shorten')
+            .auth(USER_NAME!, PASSWORD!)
+            .send({ url: 'https://example.com/very/long/path', ttl: customTTL })
+            .expect(201)
+
+        expect(res.body).toHaveProperty('shortCode');
+        expect(res.body).toHaveProperty('shortUrl');
+        expect(res.body).toHaveProperty('ttl');
+        expect(res.body.ttl).toBe(customTTL);
 
         shortCode = res.body.shortCode;
     });

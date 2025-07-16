@@ -46,17 +46,14 @@ describe('Redirection System', () => {
     });
 
     it('expires after ttl seconds', async () => {
-        // 1. shorten with tiny TTL
         const res = await request(app.getHttpServer())
             .post('/v1/shorten')
             .auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path', ttl: 2 })
             .expect(201);
 
-        // 2. wait 3 seconds
         await new Promise(r => setTimeout(r, 3000));
 
-        // 3. key should be gone
         return request(app.getHttpServer())
             .get(`/${res.body.shortCode}`)
             .expect(404);
