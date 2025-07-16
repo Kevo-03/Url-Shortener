@@ -1,9 +1,9 @@
 import { Controller, Get, Post, Body, Param, NotFoundException, Res, Version, UseGuards } from '@nestjs/common';
-import { UrlsService } from 'src/urls/urls.service';
+import { UrlsService } from '../../urls.service';
 import { Response } from 'express';
-import { CreateUrlDto } from 'src/urls/dto/create-url.dto';
-import { ENV_VAR } from 'src/config/app.config';
-import { BasicAuthGuard } from 'src/urls/auth/auth.guard';
+import { CreateUrlDto } from '../../dto/create-url.dto';
+import { ENV_VAR } from '../../../config/app.config';
+import { BasicAuthGuard } from '../../auth/auth.guard';
 
 const BASE_URL = ENV_VAR.BASE_URL;
 
