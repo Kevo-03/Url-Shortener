@@ -21,7 +21,32 @@ export class UrlsRepository {
     }
 
     async saveIfUnique(code: string, longUrl: string, ttl: number) {
-        const ok = await this.redis.set(code, longUrl, 'EX', ttl, 'NX');
-        return ok === 'OK';
+        const setRes = await this.redis.set(
+            `short:${code}`, longUrl, 'EX', ttl, 'NX'
+        );
+        if (setRes !== 'OK') return false;
+        await this.redis.sadd(`reverse:${longUrl}`, code);
+        return true;
+    }
+
+    async findBestCode(longUrl: string) {
+        const codes = await this.redis.smembers(`reverse:${longUrl}`);
+        if (codes.length === 0) return null;
+
+        const pipe = this.redis.multi();
+        codes.forEach(c => pipe.ttl(`short:${c}`));
+
+        const replies = await pipe.exec();
+        if (!replies) return null;
+
+        const ttls = replies.map(r => r[1] as number);
+
+        let best = 0;
+        for (let i = 1; i < codes.length; i++) {
+            const cur = ttls[i] < 0 ? Number.MIN_SAFE_INTEGER : ttls[i];
+            const bestVal = ttls[best] < 0 ? Number.MIN_SAFE_INTEGER : ttls[best];
+            if (cur > bestVal) best = i;
+        }
+        return { code: codes[best], ttl: ttls[best] };
     }
 }

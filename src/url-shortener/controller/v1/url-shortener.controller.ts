@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, NotFoundException, Res, Version, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, NotFoundException, BadRequestException, Res, Version, UseGuards } from '@nestjs/common';
 import { UrlsService } from '../../url-shortener.service';
 import { Response } from 'express';
 import { CreateUrlDto } from '../../dto/create-url.dto';
@@ -20,6 +20,16 @@ export class UrlsControllerV1 {
         return res.redirect(301, longUrl);
     }
 
+    @Version('1')
+    @Get('lookup')
+    async lookup(@Query('url') url: string) {
+        if (!url) throw new BadRequestException('url query param required');
+
+        const hit = await this.urlsService.findExisting(url);
+        if (!hit) throw new NotFoundException('No short URL for that address');
+
+        return hit;   // { shortCode, ttl }
+    }
     //Basic auth, envden al, sadece postu versiyonla 
     @Version('1')
     @UseGuards(BasicAuthGuard)
@@ -28,4 +38,6 @@ export class UrlsControllerV1 {
         const { code, ttl } = await this.urlsService.shorten(body.url, body.ttl);
         return { shortUrl: `${BASE_URL}/${code}`, shortCode: code, ttl };
     }
+
+    // gerçek url input, daha önce kısaltılmışsa en uzun ttl e sahip kodu dön
 }
