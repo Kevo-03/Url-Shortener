@@ -21,4 +21,5 @@ export const ENV_VAR = {
     MAX_ATTEMPTS: toNumber(process.env.MAX_ATTEMPTS, 3),
     BASIC_AUTH_USER: process.env.BASIC_AUTH_USER,
     BASIC_AUTH_PASS: process.env.BASIC_AUTH_PASS,
+    BASIC_AUTH: process.env.BASIC_AUTH,
 }
