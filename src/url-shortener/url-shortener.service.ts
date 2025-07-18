@@ -27,4 +27,8 @@ export class UrlsService {
     async resolve(shortUrl: string) {
         return this.repo.get(shortUrl);
     }
+
+    async findExisting(longUrl: string) {
+        return this.repo.findBestCode(longUrl);
+    }
 }
