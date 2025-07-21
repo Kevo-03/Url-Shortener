@@ -49,6 +49,9 @@ appendonly.aof
 .env.development
 .env.test
 
+#npmrc
+.npmrc
+
 # temp directory
 .temp
 .tmp
