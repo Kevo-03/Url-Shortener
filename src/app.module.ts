@@ -28,11 +28,27 @@ import { TNestHelpers } from '@token-org/token-x-common-util';
     UrlsModule,
   ],
   controllers: [AppController],
-  providers: [AppService,
+  providers: [
     {
       provide: APP_PIPE,
-      useValue: new ValidationPipe({ whitelist: true })
-    }],
+      useValue: new ValidationPipe({
+        skipMissingProperties: false,
+        transform: true, // Automatically transform payloads to be objects typed according to their DTO classes
+        whitelist: true, // Strip properties not existing in the DTO
+        forbidNonWhitelisted: true, // Throw errors if non-whitelisted values are provided
+        stopAtFirstError: true,
+      }),
+    },
+    {
+      provide: APP_FILTER,
+      useClass: TNestHelpers.Filters.GlobalExceptionFilter,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TNestHelpers.Interceptors.GlobalResponseInterceptor,
+    },
+    AppService,
+  ],
 })
 
 export class AppModule { }

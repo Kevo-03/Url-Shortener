@@ -52,12 +52,12 @@ describe('Shortening System', () => {
             .send({ url: 'https://example.com/very/long/path' })
             .expect(201)
 
-        expect(res.body).toHaveProperty('shortCode');
-        expect(res.body).toHaveProperty('shortUrl');
-        expect(res.body).toHaveProperty('ttl');
-        expect(res.body.ttl).toBe(2592000);
+        expect(res.body.data).toHaveProperty('shortCode');
+        expect(res.body.data).toHaveProperty('shortUrl');
+        expect(res.body.data).toHaveProperty('ttl');
+        expect(res.body.data.ttl).toBe(2592000);
 
-        shortCode = res.body.shortCode;
+        shortCode = res.body.data.shortCode;
     });
 
     it('should create a short code and url with custom ttl when authenticated', async () => {
@@ -68,12 +68,12 @@ describe('Shortening System', () => {
             .send({ url: 'https://example.com/very/long/path', ttl: customTTL })
             .expect(201)
 
-        expect(res.body).toHaveProperty('shortCode');
-        expect(res.body).toHaveProperty('shortUrl');
-        expect(res.body).toHaveProperty('ttl');
-        expect(res.body.ttl).toBe(customTTL);
+        expect(res.body.data).toHaveProperty('shortCode');
+        expect(res.body.data).toHaveProperty('shortUrl');
+        expect(res.body.data).toHaveProperty('ttl');
+        expect(res.body.data.ttl).toBe(customTTL);
 
-        shortCode = res.body.shortCode;
+        shortCode = res.body.data.shortCode;
     });
 
     it('should return 400 for non url input', async () => {
