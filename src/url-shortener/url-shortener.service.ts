@@ -25,7 +25,7 @@ export class UrlsService {
     }
 
     async resolve(shortUrl: string) {
-        return this.repo.get(shortUrl);
+        return this.repo.get(`short:${shortUrl}`);
     }
 
     async findExisting(longUrl: string) {

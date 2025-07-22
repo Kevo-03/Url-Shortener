@@ -1,11 +1,12 @@
 import { Module, ValidationPipe } from '@nestjs/common';
-import { APP_PIPE } from '@nestjs/core';
+import { APP_PIPE, APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UrlsModule } from './url-shortener/url-shortener.module';
 import { RedisModule, RedisModuleOptions } from '@nestjs-modules/ioredis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { REDIS_CONNECTION_URL } from './config/redis.config';
+import { TNestHelpers } from '@token-org/token-x-common-util';
 
 
 @Module({
@@ -33,4 +34,5 @@ import { REDIS_CONNECTION_URL } from './config/redis.config';
       useValue: new ValidationPipe({ whitelist: true })
     }],
 })
+
 export class AppModule { }
