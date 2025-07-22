@@ -25,7 +25,10 @@ export class UrlsRepository {
             `short:${code}`, longUrl, 'EX', ttl, 'NX'
         );
         if (setRes !== 'OK') return false;
-        await this.redis.sadd(`reverse:${longUrl}`, code);
+        const pipe = this.redis.multi();
+        pipe.sadd(`reverse:${longUrl}`, code);
+        pipe.expire(`reverse:${longUrl}`, ttl);
+        await pipe.exec();
         return true;
     }
 
@@ -39,14 +42,16 @@ export class UrlsRepository {
         const replies = await pipe.exec();
         if (!replies) return null;
 
-        const ttls = replies.map(r => r[1] as number);
+        let best: { code: string; ttl: number } | null = null;
 
-        let best = 0;
-        for (let i = 1; i < codes.length; i++) {
-            const cur = ttls[i] < 0 ? Number.MIN_SAFE_INTEGER : ttls[i];
-            const bestVal = ttls[best] < 0 ? Number.MIN_SAFE_INTEGER : ttls[best];
-            if (cur > bestVal) best = i;
+        for (let i = 0; i < codes.length; i++) {
+            const ttl = replies[i][1] as number;
+            if (ttl <= 0) {
+                await this.redis.srem(`reverse:${longUrl}`, codes[i]);
+                continue;
+            }
+            if (!best || ttl > best.ttl) best = { code: codes[i], ttl };
         }
-        return { code: codes[best], ttl: ttls[best] };
+        return best;
     }
 }

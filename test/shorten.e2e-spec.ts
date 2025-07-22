@@ -8,6 +8,8 @@ import { ENV_VAR } from '../src/config/app.config';
 describe('Shortening System', () => {
     let app: INestApplication<App>;
     let shortCode: string;
+    let shortCodeA: string;
+    let shortCodeB: string;
 
     const USER_NAME = ENV_VAR.BASIC_AUTH_USER;
     const PASSWORD = ENV_VAR.BASIC_AUTH_PASS;
@@ -90,6 +92,34 @@ describe('Shortening System', () => {
             .auth(USER_NAME!, PASSWORD!)
             .send({ url: 123 })
             .expect(400)
+    });
+
+    it('GET /v1/lookup returns code with longest TTL', async () => {
+        /* 1. create two mappings for the same longUrl with different TTLs */
+        const resA = await request(app.getHttpServer())
+            .post('/v1/shorten')
+            .auth(USER_NAME!, PASSWORD!)
+            .send({ url: 'https://example.com/very/long/path2', ttl: 120 })      // 2 min
+            .expect(201);
+        shortCodeA = resA.body.data.shortCode;
+
+        const resB = await request(app.getHttpServer())
+            .post('/v1/shorten')
+            .auth(USER_NAME!, PASSWORD!)
+            .send({ url: 'https://example.com/very/long/path2', ttl: 600 })      // 10 min
+            .expect(201);
+        shortCodeB = resB.body.data.shortCode;
+        console.log(shortCodeA);
+        console.log(shortCodeB);
+
+        /* 2. lookup should return B because it lives longer */
+        const resLookup = await request(app.getHttpServer())
+            .get('/v1/lookup')
+            .query({ url: 'https://example.com/very/long/path2' })
+            .expect(200);
+
+        expect(resLookup.body.data.code).toBe(shortCodeB);
+        expect(resLookup.body.data.ttl).toBeGreaterThan(300);  // sanity
     });
 
     /*  it('should redirecs to the original Url mapped to the short Url', async () => {
