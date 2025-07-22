@@ -25,7 +25,7 @@ describe('Redirection System', () => {
             .auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path' })
             .expect(201)
-        shortCode = res.body.shortCode;
+        shortCode = res.body.data.shortCode;
     });
 
     it('should redirecs to the original Url mapped to the short Url', async () => {
