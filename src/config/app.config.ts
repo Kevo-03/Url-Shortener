@@ -7,6 +7,7 @@ function toNumber(val: string | undefined, fallback: number): number {
 }
 
 export const ENV_VAR = {
+    PORT: process.env.PORT,
     VERSION: process.env.npm_package_version,
     // ───────── Redis ─────────
     REDIS_HOST: process.env.REDIS_HOST,
