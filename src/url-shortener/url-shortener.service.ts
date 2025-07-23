@@ -2,9 +2,8 @@ import { Injectable, Logger, ServiceUnavailableException } from '@nestjs/common'
 import { UrlsRepository } from './repository/url-shortener.repository';
 import { nanoid } from 'nanoid'
 import { ENV_VAR } from '../config/app.config';
+import { CODE_LEN, MAX_ATTEMPTS } from '../config/var.config';
 
-const CODE_LEN = ENV_VAR.CODE_LEN;
-const MAX_ATTEMPTS = ENV_VAR.MAX_ATTEMPTS;
 const DEFAULT_TTL = ENV_VAR.DEFAULT_TTL;
 
 @Injectable()
