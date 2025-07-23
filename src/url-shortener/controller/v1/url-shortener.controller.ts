@@ -28,7 +28,7 @@ export class UrlsControllerV1 {
         const hit = await this.urlsService.findExisting(url);
         if (!hit) throw new NotFoundException('No short URL for that address');
 
-        return hit;   // { shortCode, ttl }
+        return hit;
     }
     //Basic auth, envden al, sadece postu versiyonla 
     @Version('1')
