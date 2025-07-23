@@ -9,8 +9,7 @@ describe('Redirection System', () => {
     let app: INestApplication<App>;
     let shortCode: string;
 
-    const USER_NAME = ENV_VAR.BASIC_AUTH_USER;
-    const PASSWORD = ENV_VAR.BASIC_AUTH_PASS;
+    const AUTH = ENV_VAR.BASIC_AUTH;
 
     beforeEach(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -22,7 +21,8 @@ describe('Redirection System', () => {
         await app.init();
         const res = await request(app.getHttpServer())
             .post('/v1/shorten')
-            .auth(USER_NAME!, PASSWORD!)
+            .set('Authorization', AUTH!)
+            //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path' })
             .expect(201)
         shortCode = res.body.data.shortCode;

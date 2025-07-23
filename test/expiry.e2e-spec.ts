@@ -7,8 +7,7 @@ import * as request from 'supertest';
 import * as tk from 'timekeeper';
 import { ENV_VAR } from '../src/config/app.config';
 
-const USER = ENV_VAR.BASIC_AUTH_USER!;
-const PASS = ENV_VAR.BASIC_AUTH_PASS!;
+const AUTH = ENV_VAR.BASIC_AUTH;
 
 describe('Redirection TTL (mock Redis)', () => {
     let app: INestApplication;
@@ -37,7 +36,8 @@ describe('Redirection TTL (mock Redis)', () => {
 
         const { body } = await request(app.getHttpServer())
             .post('/v1/shorten')
-            .auth(USER, PASS)
+            .set('Authorization', AUTH!)
+            //.auth(USER, PASS)
             .send({ url: 'https://example.com/very/long/path', ttl: 2 })
             .expect(201);
 

@@ -11,8 +11,7 @@ describe('Shortening System', () => {
     let shortCodeA: string;
     let shortCodeB: string;
 
-    const USER_NAME = ENV_VAR.BASIC_AUTH_USER;
-    const PASSWORD = ENV_VAR.BASIC_AUTH_PASS;
+    const AUTH = ENV_VAR.BASIC_AUTH;
 
     beforeEach(async () => {
         const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -34,7 +33,8 @@ describe('Shortening System', () => {
     it('should return 401 if credentials are wrong', async () => {
         return request(app.getHttpServer())
             .post('/v1/shorten')
-            .auth('wrong', 'wrong')
+            .set('Authorization', 'Basic Bad')
+            //.auth('wrong', 'wrong')
             .send({ url: 'https://example.com/very/long/path' })
             .expect(401);
     });
@@ -50,7 +50,8 @@ describe('Shortening System', () => {
     it('should create a short code and url with default ttl when authenticated', async () => {
         const res = await request(app.getHttpServer())
             .post('/v1/shorten')
-            .auth(USER_NAME!, PASSWORD!)
+            .set('Authorization', AUTH!)
+            //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path' })
             .expect(201)
 
@@ -66,7 +67,8 @@ describe('Shortening System', () => {
         const customTTL = 5000;
         const res = await request(app.getHttpServer())
             .post('/v1/shorten')
-            .auth(USER_NAME!, PASSWORD!)
+            .set('Authorization', AUTH!)
+            //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path', ttl: customTTL })
             .expect(201)
 
@@ -81,7 +83,8 @@ describe('Shortening System', () => {
     it('should return 400 for non url input', async () => {
         return request(app.getHttpServer())
             .post('/v1/shorten')
-            .auth(USER_NAME!, PASSWORD!)
+            .set('Authorization', AUTH!)
+            //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'Hello World' })
             .expect(400)
     });
@@ -89,7 +92,8 @@ describe('Shortening System', () => {
     it('should return 400 for non string input', async () => {
         return request(app.getHttpServer())
             .post('/v1/shorten')
-            .auth(USER_NAME!, PASSWORD!)
+            .set('Authorization', AUTH!)
+            //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 123 })
             .expect(400)
     });
@@ -98,14 +102,16 @@ describe('Shortening System', () => {
         /* 1. create two mappings for the same longUrl with different TTLs */
         const resA = await request(app.getHttpServer())
             .post('/v1/shorten')
-            .auth(USER_NAME!, PASSWORD!)
+            .set('Authorization', AUTH!)
+            //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path2', ttl: 120 })      // 2 min
             .expect(201);
         shortCodeA = resA.body.data.shortCode;
 
         const resB = await request(app.getHttpServer())
             .post('/v1/shorten')
-            .auth(USER_NAME!, PASSWORD!)
+            .set('Authorization', AUTH!)
+            //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path2', ttl: 600 })      // 10 min
             .expect(201);
         shortCodeB = resB.body.data.shortCode;
