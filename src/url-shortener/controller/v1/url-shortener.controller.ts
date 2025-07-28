@@ -7,17 +7,18 @@ import { BasicAuthGuard } from '../../auth/auth.guard';
 
 const BASE_URL = ENV_VAR.BASE_URL;
 
-@Controller()
+@Controller('api')
 export class UrlsControllerV1 {
     constructor(private urlsService: UrlsService) { }
 
-    @Get(':code')
-    async redirect(@Param('code') shortUrl: string, @Res() res: Response) {
+    @Get('redirect/:code')
+    async redirect(@Param('code') shortUrl: string, /*@Res() res: Response*/) {
         const longUrl = await this.urlsService.resolve(shortUrl);
         if (!longUrl) {
             throw new NotFoundException('Short URL not found');
         }
-        return res.redirect(301, longUrl);
+        //return res.redirect(301, longUrl);
+        return { longUrl };
     }
 
     @Version('1')

@@ -8,6 +8,13 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
+  /* app.enableCors({
+    origin: 'http://localhost:5173',   // or ['http://localhost:5173', …]
+    exposedHeaders: ['Location'],
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
+    allowedHeaders: 'Content-Type, Authorization',
+    credentials: true,                // if you send cookies/Authorization
+  }); */
   await app.listen(ENV_VAR.PORT || '3000');
 }
 bootstrap();
