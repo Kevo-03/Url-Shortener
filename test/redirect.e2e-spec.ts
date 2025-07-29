@@ -20,7 +20,7 @@ describe('Redirection System', () => {
         app.enableVersioning({ type: VersioningType.URI });
         await app.init();
         const res = await request(app.getHttpServer())
-            .post('/v1/shorten')
+            .post('/v1/api/shorten')
             .set('Authorization', AUTH!)
             //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path' })
@@ -32,16 +32,16 @@ describe('Redirection System', () => {
         const code = shortCode;
 
         const res = await request(app.getHttpServer())
-            .get(`/${code}`)
+            .get(`/api/redirect/${code}`)
             .redirects(0)
-            .expect(301)
+            .expect(200)
 
-        expect(res.headers.location).toBe('https://example.com/very/long/path',);
+        expect(res.body.data.longUrl).toBe('https://example.com/very/long/path',);
     });
 
     it('should return 404 for non-existing short Url', async () => {
         return request(app.getHttpServer())
-            .get('/abcdser')
+            .get('/api/redirect/abcdser')
             .expect(404)
     });
 

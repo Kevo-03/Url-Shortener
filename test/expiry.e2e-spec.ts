@@ -35,7 +35,7 @@ describe('Redirection TTL (mock Redis)', () => {
         tk.freeze(now);
 
         const { body } = await request(app.getHttpServer())
-            .post('/v1/shorten')
+            .post('/v1/api/shorten')
             .set('Authorization', AUTH!)
             //.auth(USER, PASS)
             .send({ url: 'https://example.com/very/long/path', ttl: 2 })
@@ -50,7 +50,7 @@ describe('Redirection TTL (mock Redis)', () => {
 
 
         await request(app.getHttpServer())
-            .get(`/${code}`)
+            .get(`/api/redirect/${code}`)
             .expect(404);
     });
 });

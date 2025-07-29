@@ -25,14 +25,14 @@ describe('Shortening System', () => {
 
     it('should return 401 if unauthenticated shortening request is made', async () => {
         return request(app.getHttpServer())
-            .post('/v1/shorten')
+            .post('/v1/api/shorten')
             .send({ url: 'https://example.com/very/long/path' })
             .expect(401);
     });
 
     it('should return 401 if credentials are wrong', async () => {
         return request(app.getHttpServer())
-            .post('/v1/shorten')
+            .post('/v1/api/shorten')
             .set('Authorization', 'Basic Bad')
             //.auth('wrong', 'wrong')
             .send({ url: 'https://example.com/very/long/path' })
@@ -41,7 +41,7 @@ describe('Shortening System', () => {
 
     it('should return 401 if authorization header is not Basic', async () => {
         return request(app.getHttpServer())
-            .post('/v1/shorten')
+            .post('/v1/api/shorten')
             .set('Authorization', 'Bearer whatever-token')
             .send({ url: 'https://example.com/very/long/path' })
             .expect(401);
@@ -49,7 +49,7 @@ describe('Shortening System', () => {
 
     it('should create a short code and url with default ttl when authenticated', async () => {
         const res = await request(app.getHttpServer())
-            .post('/v1/shorten')
+            .post('/v1/api/shorten')
             .set('Authorization', AUTH!)
             //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path' })
@@ -66,7 +66,7 @@ describe('Shortening System', () => {
     it('should create a short code and url with custom ttl when authenticated', async () => {
         const customTTL = 5000;
         const res = await request(app.getHttpServer())
-            .post('/v1/shorten')
+            .post('/v1/api/shorten')
             .set('Authorization', AUTH!)
             //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path', ttl: customTTL })
@@ -82,7 +82,7 @@ describe('Shortening System', () => {
 
     it('should return 400 for non url input', async () => {
         return request(app.getHttpServer())
-            .post('/v1/shorten')
+            .post('/v1/api/shorten')
             .set('Authorization', AUTH!)
             //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'Hello World' })
@@ -91,7 +91,7 @@ describe('Shortening System', () => {
 
     it('should return 400 for non string input', async () => {
         return request(app.getHttpServer())
-            .post('/v1/shorten')
+            .post('/v1/api/shorten')
             .set('Authorization', AUTH!)
             //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 123 })
@@ -101,7 +101,7 @@ describe('Shortening System', () => {
     it('GET /v1/lookup returns code with longest TTL', async () => {
         /* 1. create two mappings for the same longUrl with different TTLs */
         const resA = await request(app.getHttpServer())
-            .post('/v1/shorten')
+            .post('/v1/api/shorten')
             .set('Authorization', AUTH!)
             //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path2', ttl: 120 })      // 2 min
@@ -109,7 +109,7 @@ describe('Shortening System', () => {
         shortCodeA = resA.body.data.shortCode;
 
         const resB = await request(app.getHttpServer())
-            .post('/v1/shorten')
+            .post('/v1/api/shorten')
             .set('Authorization', AUTH!)
             //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path2', ttl: 600 })      // 10 min
@@ -120,7 +120,7 @@ describe('Shortening System', () => {
 
         /* 2. lookup should return B because it lives longer */
         const resLookup = await request(app.getHttpServer())
-            .get('/v1/lookup')
+            .get('/v1/api/lookup')
             .query({ url: 'https://example.com/very/long/path2' })
             .expect(200);
 
