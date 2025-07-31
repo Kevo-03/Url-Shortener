@@ -1,98 +1,169 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# 📦 URL Shortener Service
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A simple URL shortening service built with **NestJS** and **Redis**. It allows users to shorten long URLs and redirect using short codes. It also supports optional expiry and basic authentication.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+- Generate short URLs for any valid long URL  
+- Retrieve the original URL via redirection  
+- Retrieve the short code generated for a specific URL, retrieve the one with the longest ttl if there are more than one.
+- Expiry support for mappings  
+- Basic Authentication for protected endpoints  
+- Redis-backed storage for fast access  
+- API versioning
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## ⚙️ Tech Stack
 
-## Project setup
+- **Node.js** + **NestJS**  
+- **Redis**  
+- **TypeScript**  
+- **Jest** for testing  
 
-```bash
-$ npm install
-```
 
-## Compile and run the project
+## 🔧 Setup Instructions
+
+### Prerequisites
+
+- Node.js (v18+ recommended)  
+- Redis  
+- pnpm or npm  
+
+### Installation
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+pnpm install
 ```
 
-## Run tests
+### Create `.env` file
 
 ```bash
-# unit tests
-$ npm run test
+PORT= # Port the NestJS server will run on
 
-# e2e tests
-$ npm run test:e2e
+# Redis connection settings
+REDIS_HOST= # Hostname or IP of your Redis instance (e.g., localhost)
+REDIS_PORT= # Port on which Redis is running (e.g., 6379)
+REDIS_DB= # Redis database index (e.g., 0)
 
-# test coverage
-$ npm run test:cov
+SHORTENER_PROXY_BASE_URL= # The base URL used for generating short links (usually your frontend or proxy URL)
+
+DEFAULT_TTL= # Default Time-To-Live (TTL) for shortened URLs in seconds (e.g., 30 days = 2592000)
+
+# Basic authentication header value for protecting certain endpoints.
+BASIC_AUTH= # Format: "Basic base64(username:password)"   
 ```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+For testing create .env.test file with variables for a separate test redis server. For example if the redis port for your development is 6379 and index is 0, then set test redis port to 6380 and index to 1 or another different value than development.
+### Start Redis
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+# for dev
+redis-server
+# for testing
+redis-server --port 6380 --daemonize yes --save "" --appendonly no
+# use your testing port if it is different than 6380
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+### Start the server
 
-## Resources
+```bash
+pnpm run start:dev
+# or
+pnpm run start
+```
 
-Check out a few resources that may come in handy when working with NestJS:
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## 🧪 Running Tests
 
-## Support
+```bash
+pnpm run test:e2e
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## 📡 API Usage
 
-## Stay in touch
+### 🔐 Authentication
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Post shorten endpoint is protected using basic auth. Use the `.env` values as credentials.
 
-## License
+### POST `/v1/shorten`
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+**Description:** Shorten a long URL.
+
+**Headers:**
+```
+Authorization: Basic <base64encoded-username:password>
+```
+
+**cURL Request:**
+```json
+curl -X POST http://localhost:3000/v1/shorten \
+  -u username:password \
+  -H "Content-Type: application/json" \
+  -d '{"url": "https://example.com/very/long/url", "ttl": 3600}'
+```
+
+**Response:**
+```json
+{
+    "shortUrl": "http://localhost:3000/nVkTz",
+    "shortCode": "nVkTz",
+    "ttl": 600
+}
+```
+
+### GET `/:code`
+
+**Description:** Redirects to the original long URL.
+
+**cURL Request:**
+```json
+curl -i http://localhost:3000/nXFjJ
+```
+
+Responds with `301` redirect or `404 Not Found`.
+
+**Example 301 Response**
+
+```json
+HTTP/1.1 301 Moved Permanently
+X-Powered-By: Express
+Location: https://example.com/very/long/url
+Vary: Accept
+Content-Type: text/plain; charset=utf-8
+Content-Length: 67
+Date: Thu, 24 Jul 2025 13:18:21 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+
+Moved Permanently. Redirecting to https://example.com/very/long/url
+```
+
+### GET `/v1/lookup`
+
+**Description:** Returns the generated short code for the given url, if more than one short code exists in redis returns the one with the longest ttl.
+
+**cURL Request:**
+```json
+curl -G http://localhost:3000/v1/lookup \
+  --data-urlencode "url=https://example.com/very/long/url"
+```
+
+**Response:**
+```json
+{
+   "code": "nXFjJ",
+    "ttl": 2834
+}
+```
+
+## 🗑 Expiry and Cleanup
+
+- Shortened URLs expire based on TTL (default or custom).  
+- Redis handles automatic deletion.  
+- If a URL is expired, service responds with `404`.
+
+
+## 🛡️ Security Notes
+
+- Protect API with `.env`-defined Basic Auth  
+- Only authenticated users can shorten URLs  
+- Redirection is open to all (public access)
+

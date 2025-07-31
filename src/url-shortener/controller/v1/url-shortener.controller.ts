@@ -7,18 +7,17 @@ import { BasicAuthGuard } from '../../auth/auth.guard';
 
 const BASE_URL = ENV_VAR.BASE_URL;
 
-@Controller('api')
+@Controller()
 export class UrlsControllerV1 {
     constructor(private urlsService: UrlsService) { }
 
-    @Get('redirect/:code')
-    async redirect(@Param('code') shortUrl: string, /*@Res() res: Response*/) {
+    @Get(':code')
+    async redirect(@Param('code') shortUrl: string, @Res() res: Response) {
         const longUrl = await this.urlsService.resolve(shortUrl);
         if (!longUrl) {
             throw new NotFoundException('Short URL not found');
         }
-        //return res.redirect(301, longUrl);
-        return { longUrl };
+        return res.redirect(301, longUrl);
     }
 
     @Version('1')
@@ -31,7 +30,6 @@ export class UrlsControllerV1 {
 
         return hit;
     }
-    //Basic auth, envden al, sadece postu versiyonla 
     @Version('1')
     @UseGuards(BasicAuthGuard)
     @Post('shorten')
@@ -39,6 +37,4 @@ export class UrlsControllerV1 {
         const { code, ttl } = await this.urlsService.shorten(body.url, body.ttl);
         return { shortUrl: `${BASE_URL}/${code}`, shortCode: code, ttl };
     }
-
-    // gerçek url input, daha önce kısaltılmışsa en uzun ttl e sahip kodu dön
 }
