@@ -103,9 +103,16 @@ curl -X POST http://localhost:3000/v1/shorten \
 **Response:**
 ```json
 {
-    "shortUrl": "http://localhost:3000/nVkTz",
-    "shortCode": "nVkTz",
-    "ttl": 600
+    "statusCode": 201,
+    "success": true,
+    "timestamp": "2025-07-22T19:49:17.940Z",
+    "path": "/v1/shorten",
+    "data": {
+        "shortUrl": "http://localhost:3000/nVkTz",
+        "shortCode": "nVkTz",
+        "ttl": 600
+    },
+    "error": null
 }
 ```
 
@@ -149,8 +156,15 @@ curl -G http://localhost:3000/v1/lookup \
 **Response:**
 ```json
 {
-   "code": "nXFjJ",
-    "ttl": 2834
+    "statusCode": 200,
+    "success": true,
+    "timestamp": "2025-07-24T13:27:00.196Z",
+    "path": "/v1/lookup?url=https://example.com/very/long/url",
+    "data": {
+        "code": "nXFjJ",
+        "ttl": 2834
+    },
+    "error": null
 }
 ```
 
