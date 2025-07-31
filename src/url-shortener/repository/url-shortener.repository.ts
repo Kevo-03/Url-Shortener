@@ -2,9 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Redis } from 'ioredis';
 import { createHash } from 'crypto';
-import { url } from 'inspector';
-
-//hem default değer hem env (isteğe göre overwrite)
 
 @Injectable()
 export class UrlsRepository {
