@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRedis } from '@nestjs-modules/ioredis';
 import { Redis } from 'ioredis';
+import { createHash } from 'crypto';
+import { url } from 'inspector';
 
 //hem default değer hem env (isteğe göre overwrite)
 
 @Injectable()
 export class UrlsRepository {
     constructor(@InjectRedis() private readonly redis: Redis) { }
+
+    private urlKey(longUrl: string) {
+        return `reverse:${createHash('sha256').update(longUrl).digest('hex')}`;
+    }
 
     async save(code: string, longUrl: string, ttl: number): Promise<'OK'> {
         return this.redis.set(code, longUrl, 'EX', ttl);
@@ -25,15 +31,17 @@ export class UrlsRepository {
             `short:${code}`, longUrl, 'EX', ttl, 'NX'
         );
         if (setRes !== 'OK') return false;
+        const urlKey = this.urlKey(longUrl);
         const pipe = this.redis.multi();
-        pipe.sadd(`reverse:${longUrl}`, code);
-        pipe.expire(`reverse:${longUrl}`, ttl);
+        pipe.sadd(urlKey, code);
+        pipe.expire(urlKey, ttl);
         await pipe.exec();
         return true;
     }
 
     async findBestCode(longUrl: string) {
-        const codes = await this.redis.smembers(`reverse:${longUrl}`);
+        const urlKey = this.urlKey(longUrl);
+        const codes = await this.redis.smembers(urlKey);
         if (codes.length === 0) return null;
 
         const pipe = this.redis.multi();
@@ -47,7 +55,7 @@ export class UrlsRepository {
         for (let i = 0; i < codes.length; i++) {
             const ttl = replies[i][1] as number;
             if (ttl <= 0) {
-                await this.redis.srem(`reverse:${longUrl}`, codes[i]);
+                await this.redis.srem(urlKey, codes[i]);
                 continue;
             }
             if (!best || ttl > best.ttl) best = { code: codes[i], ttl };

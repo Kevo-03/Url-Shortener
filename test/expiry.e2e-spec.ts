@@ -37,12 +37,11 @@ describe('Redirection TTL (mock Redis)', () => {
         const { body } = await request(app.getHttpServer())
             .post('/v1/shorten')
             .set('Authorization', AUTH!)
-            //.auth(USER, PASS)
             .send({ url: 'https://example.com/very/long/path', ttl: 2 })
             .expect(201);
 
-        const code = body.data.shortCode;
-        const realTtl = body.data.ttl;
+        const code = body.shortCode;
+        const realTtl = body.ttl;
 
         const msToJump = (realTtl + 1) * 1000;
         tk.travel(new Date(now.getTime() + msToJump));

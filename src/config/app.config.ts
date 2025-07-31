@@ -7,6 +7,8 @@ function toNumber(val: string | undefined, fallback: number): number {
 }
 
 export const ENV_VAR = {
+    PORT: process.env.PORT,
+    VERSION: process.env.npm_package_version,
     // ───────── Redis ─────────
     REDIS_HOST: process.env.REDIS_HOST,
     REDIS_PORT: process.env.REDIS_PORT,
@@ -16,7 +18,7 @@ export const ENV_VAR = {
 
     // ───────── App settings ─────────
     DEFAULT_TTL: toNumber(process.env.DEFAULT_TTL, 60 * 60 * 24 * 30),  // 30 days
-    BASE_URL: process.env.BASE_URL ?? 'http://localhost:3000',
+    BASE_URL: process.env.SHORTENER_PROXY_BASE_URL,
     CODE_LEN: toNumber(process.env.CODE_LEN, 7),
     MAX_ATTEMPTS: toNumber(process.env.MAX_ATTEMPTS, 3),
     BASIC_AUTH_USER: process.env.BASIC_AUTH_USER,

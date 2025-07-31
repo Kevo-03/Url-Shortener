@@ -30,7 +30,6 @@ export class UrlsControllerV1 {
 
         return hit;
     }
-    //Basic auth, envden al, sadece postu versiyonla 
     @Version('1')
     @UseGuards(BasicAuthGuard)
     @Post('shorten')
@@ -38,6 +37,4 @@ export class UrlsControllerV1 {
         const { code, ttl } = await this.urlsService.shorten(body.url, body.ttl);
         return { shortUrl: `${BASE_URL}/${code}`, shortCode: code, ttl };
     }
-
-    // gerçek url input, daha önce kısaltılmışsa en uzun ttl e sahip kodu dön
 }

@@ -22,10 +22,9 @@ describe('Redirection System', () => {
         const res = await request(app.getHttpServer())
             .post('/v1/shorten')
             .set('Authorization', AUTH!)
-            //.auth(USER_NAME!, PASSWORD!)
             .send({ url: 'https://example.com/very/long/path' })
             .expect(201)
-        shortCode = res.body.data.shortCode;
+        shortCode = res.body.shortCode;
     });
 
     it('should redirecs to the original Url mapped to the short Url', async () => {
@@ -44,19 +43,4 @@ describe('Redirection System', () => {
             .get('/abcdser')
             .expect(404)
     });
-
-    // timekeeper
-    /*  it('expires after ttl seconds', async () => {
-         const res = await request(app.getHttpServer())
-             .post('/v1/shorten')
-             .auth(USER_NAME!, PASSWORD!)
-             .send({ url: 'https://example.com/very/long/path', ttl: 2 })
-             .expect(201);
- 
-         await new Promise(r => setTimeout(r, 3000));
- 
-         return request(app.getHttpServer())
-             .get(`/${res.body.shortCode}`)
-             .expect(404);
-     }); */
 });
