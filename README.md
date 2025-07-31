@@ -93,7 +93,7 @@ Authorization: Basic <base64encoded-username:password>
 ```
 
 **cURL Request:**
-```json
+```bash
 curl -X POST http://localhost:3000/v1/shorten \
   -u username:password \
   -H "Content-Type: application/json" \
@@ -114,7 +114,7 @@ curl -X POST http://localhost:3000/v1/shorten \
 **Description:** Redirects to the original long URL.
 
 **cURL Request:**
-```json
+```bash
 curl -i http://localhost:3000/nXFjJ
 ```
 
@@ -122,7 +122,7 @@ Responds with `301` redirect or `404 Not Found`.
 
 **Example 301 Response**
 
-```json
+```bash
 HTTP/1.1 301 Moved Permanently
 X-Powered-By: Express
 Location: https://example.com/very/long/url
@@ -141,7 +141,7 @@ Moved Permanently. Redirecting to https://example.com/very/long/url
 **Description:** Returns the generated short code for the given url, if more than one short code exists in redis returns the one with the longest ttl.
 
 **cURL Request:**
-```json
+```bash
 curl -G http://localhost:3000/v1/lookup \
   --data-urlencode "url=https://example.com/very/long/url"
 ```
