@@ -54,6 +54,14 @@ BASIC_AUTH= # Format: "Basic base64(username:password)"
 For testing create .env.test file with variables for a separate test redis server. For example if the redis port for your development is 6379 and index is 0, then set test redis port to 6380 and index to 1 or another different value than development.
 ### Start Redis
 
+#### Using Docker Compose (Recommended)
+
+```bash
+docker-compose up -d
+```
+
+#### Manual Setup
+
 ```bash
 # for dev
 redis-server
