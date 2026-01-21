@@ -1,4 +1,17 @@
 services:
+  shorturl_api:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - REDIS_URI=${REDIS_URI:-redis://shorturl_redis:6379/0}
+      - PORT=${PORT:-3000}
+      - BASIC_AUTH=${BASIC_AUTH}
+      - SHORTENER_PROXY_BASE_URL=${SHORTENER_PROXY_BASE_URL}
+      - DEFAULT_TTL=${DEFAULT_TTL:-2592000}
+    depends_on:
+      - redis
+
   redis:
     image: redis:alpine
     container_name: shorturl_redis

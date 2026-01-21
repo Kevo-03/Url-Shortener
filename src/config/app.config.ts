@@ -15,6 +15,7 @@ export const ENV_VAR = {
     REDIS_DB: process.env.REDIS_DB,
     REDIS_PASS: process.env.REDIS_PASSWORD,      // may be undefined
     REDIS_TLS: process.env.REDIS_TLS === 'true',
+    REDIS_URI: process.env.REDIS_URI,            // [NEW] for Docker/Cloud
 
     // ───────── App settings ─────────
     DEFAULT_TTL: toNumber(process.env.DEFAULT_TTL, 60 * 60 * 24 * 30),  // 30 days

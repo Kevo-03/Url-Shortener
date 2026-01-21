@@ -15,7 +15,24 @@ export class UrlsControllerV1 {
     async redirect(@Param('code') shortUrl: string, @Res() res: Response) {
         const longUrl = await this.urlsService.resolve(shortUrl);
         if (!longUrl) {
-            throw new NotFoundException('Short URL not found');
+            const html = `
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <title>404 Not Found</title>
+                    <style>
+                        body { font-family: sans-serif; text-align: center; padding: 50px; background-color: #f0f2f5; }
+                        h1 { font-size: 50px; margin-bottom: 20px; color: #333; }
+                        p { font-size: 20px; color: #666; }
+                    </style>
+                </head>
+                <body>
+                    <h1>404</h1>
+                    <p>Oops! The short URL you are looking for does not exist.</p>
+                </body>
+                </html>
+            `;
+            return res.status(404).send(html);
         }
         return res.redirect(301, longUrl);
     }
