@@ -48,7 +48,7 @@ export class UrlsControllerV1 {
         return hit;
     }
     @Version('1')
-    @UseGuards(BasicAuthGuard)
+    //@UseGuards(BasicAuthGuard)
     @Post('shorten')
     async shorten(@Body() body: CreateUrlDto) {
         const { code, ttl } = await this.urlsService.shorten(body.url, body.ttl);
