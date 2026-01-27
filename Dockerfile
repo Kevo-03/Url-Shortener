@@ -13,4 +13,5 @@ WORKDIR /app
 RUN corepack enable
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules
+COPY templates ./templates
 CMD ["node", "dist/main"]

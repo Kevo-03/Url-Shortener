@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>URL Shortener</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f2f5;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Input Styles */
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .note {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        #result {
+            margin-top: 20px;
+            font-size: 18px;
+            word-break: break-all;
+            color: #007bff;
+            display: none;
+            background: #e7f1ff;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Shorten Your Link</h1>
+
+        <div class="input-group">
+            <label for="longUrl">Long URL</label>
+            <input type="url" id="longUrl" placeholder="https://example.com" required>
+        </div>
+
+        <div class="input-group">
+            <label for="ttl">TTL (Seconds) - Optional</label>
+            <input type="number" id="ttl" placeholder="e.g. 3600" min="1" max="7776000">
+            <div class="note">Max 90 days (7,776,000 seconds)</div>
+        </div>
+
+        <button onclick="shortenUrl()">Get Short Link</button>
+        <div id="result"></div>
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        async function shortenUrl() {
+            const urlInput = document.getElementById('longUrl').value;
+            const ttlInput = document.getElementById('ttl').value;
+
+            const resultDiv = document.getElementById('result');
+            const errorDiv = document.getElementById('error');
+
+            resultDiv.style.display = 'none';
+            errorDiv.innerText = '';
+
+            if (!urlInput) {
+                errorDiv.innerText = 'Please enter a URL';
+                return;
+            }
+
+            const payload = { url: urlInput };
+
+            if (ttlInput) {
+                const ttlValue = parseInt(ttlInput);
+                // Client-side validation to match DTO
+                if (ttlValue > 7776000) {
+                    errorDiv.innerText = 'TTL cannot exceed 90 days (7,776,000 seconds)';
+                    return;
+                }
+                payload.ttl = ttlValue;
+            }
+
+            try {
+                const response = await fetch('/v1/shorten', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    resultDiv.innerHTML = 'Short URL: <a href="' + data.shortUrl + '" target="_blank">' + data.shortUrl + '</a>';
+                    resultDiv.style.display = 'block';
+                } else {
+                    // If the backend rejects it (e.g. malformed URL), show that error
+                    errorDiv.innerText = Array.isArray(data.message) ? data.message[0] : data.message;
+                }
+            } catch (err) {
+                console.error(err);
+                errorDiv.innerText = 'Failed to connect to server';
+            }
+        }
+    </script>
+</body>
+
+</html>
