@@ -1,18 +1,19 @@
-# 📦 URL Shortener Service
+# URL Shortener Service
 
-A simple URL shortening service built with **NestJS** and **Redis**. It allows users to shorten long URLs and redirect using short codes. It also supports optional expiry and basic authentication.
+A URL shortening service built with **NestJS** and **Redis**. It allows users to shorten long URLs and redirect using short codes. It offers a **public web interface** for easy use and supports optional expiry.
 
-## 🚀 Features
+You can try it out at <https://url-shortener-muph.onrender.com/>, since it is deployed on render.com with free tier it can take 50 seconds to start up at your first request.
+## Features
 
+- **Public Web Interface** for easy URL shortening
 - Generate short URLs for any valid long URL  
 - Retrieve the original URL via redirection  
 - Retrieve the short code generated for a specific URL, retrieve the one with the longest ttl if there are more than one.
 - Expiry support for mappings  
-- Basic Authentication for protected endpoints  
 - Redis-backed storage for fast access  
 - API versioning
 
-## ⚙️ Tech Stack
+## Tech Stack
 
 - **Node.js** + **NestJS**  
 - **Redis**  
@@ -20,7 +21,7 @@ A simple URL shortening service built with **NestJS** and **Redis**. It allows u
 - **Jest** for testing  
 
 
-## 🔧 Setup Instructions
+## Setup Instructions
 
 ### Prerequisites
 
@@ -47,9 +48,6 @@ REDIS_DB= # Redis database index (e.g., 0)
 SHORTENER_PROXY_BASE_URL= # The base URL used for generating short links (usually your frontend or proxy URL)
 
 DEFAULT_TTL= # Default Time-To-Live (TTL) for shortened URLs in seconds (e.g., 30 days = 2592000)
-
-# Basic authentication header value for protecting certain endpoints.
-BASIC_AUTH= # Format: "Basic base64(username:password)"   
 ```
 For testing create .env.test file with variables for a separate test redis server. For example if the redis port for your development is 6379 and index is 0, then set test redis port to 6380 and index to 1 or another different value than development.
 ### Start Redis
@@ -79,31 +77,35 @@ pnpm run start
 ```
 
 
-## 🧪 Running Tests
+## Running Tests
 
 ```bash
 pnpm run test:e2e
 ```
 
-## 📡 API Usage
+## API Usage
 
-### 🔐 Authentication
+### GET `/`
 
-Post shorten endpoint is protected using basic auth. Use the `.env` values as credentials.
+**Description:** Returns the public HTML form for shortening URLs.
+
+---
 
 ### POST `/v1/shorten`
 
-**Description:** Shorten a long URL.
+**Description:** Shorten a long URL. Publicly accessible.
 
-**Headers:**
-```
-Authorization: Basic <base64encoded-username:password>
+**Request Body:**
+```json
+{
+  "url": "https://example.com/very/long/url",
+  "ttl": 3600
+}
 ```
 
 **cURL Request:**
 ```bash
 curl -X POST http://localhost:3000/v1/shorten \
-  -u username:password \
   -H "Content-Type: application/json" \
   -d '{"url": "https://example.com/very/long/url", "ttl": 3600}'
 ```
@@ -116,6 +118,8 @@ curl -X POST http://localhost:3000/v1/shorten \
     "ttl": 600
 }
 ```
+
+---
 
 ### GET `/:code`
 
@@ -144,6 +148,8 @@ Keep-Alive: timeout=5
 Moved Permanently. Redirecting to https://example.com/very/long/url
 ```
 
+---
+
 ### GET `/v1/lookup`
 
 **Description:** Returns the generated short code for the given url, if more than one short code exists in redis returns the one with the longest ttl.
@@ -162,16 +168,10 @@ curl -G http://localhost:3000/v1/lookup \
 }
 ```
 
-## 🗑 Expiry and Cleanup
+## Expiry and Cleanup
 
 - Shortened URLs expire based on TTL (default or custom).  
 - Redis handles automatic deletion.  
 - If a URL is expired, service responds with `404`.
 
-
-## 🛡️ Security Notes
-
-- Protect API with `.env`-defined Basic Auth  
-- Only authenticated users can shorten URLs  
-- Redirection is open to all (public access)
 
