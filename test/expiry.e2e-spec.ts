@@ -1,3 +1,4 @@
+// 1. ENSURE MOCK IS HERE
 jest.mock('ioredis', () => require('ioredis-mock'));
 
 import { Test, TestingModule } from '@nestjs/testing';
@@ -5,16 +6,13 @@ import { INestApplication, VersioningType } from '@nestjs/common';
 import { AppModule } from '../src/app.module';
 import * as request from 'supertest';
 import * as tk from 'timekeeper';
-import { ENV_VAR } from '../src/config/app.config';
-
-const AUTH = ENV_VAR.BASIC_AUTH;
+// Removed ENV_VAR import since we don't need AUTH anymore
 
 describe('Redirection TTL (mock Redis)', () => {
     let app: INestApplication;
 
     beforeAll(async () => {
         jest.useFakeTimers();
-
         const module: TestingModule = await Test.createTestingModule({
             imports: [AppModule],
         }).compile();
@@ -34,9 +32,9 @@ describe('Redirection TTL (mock Redis)', () => {
         const now = new Date('2025-07-23T00:00:00Z');
         tk.freeze(now);
 
+        // REMOVED .set('Authorization')
         const { body } = await request(app.getHttpServer())
             .post('/v1/shorten')
-            .set('Authorization', AUTH!)
             .send({ url: 'https://example.com/very/long/path', ttl: 2 })
             .expect(201);
 
@@ -46,7 +44,6 @@ describe('Redirection TTL (mock Redis)', () => {
         const msToJump = (realTtl + 1) * 1000;
         tk.travel(new Date(now.getTime() + msToJump));
         await jest.advanceTimersByTimeAsync(msToJump);
-
 
         await request(app.getHttpServer())
             .get(`/${code}`)
