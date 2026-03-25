@@ -2,7 +2,7 @@ services:
   shorturl_api:
     build: .
     ports:
-      - "127.0.0.1:8000:3000"
+      - "127.0.0.1:3000:3000"
     environment:
       - REDIS_URI=${REDIS_URI}
       - PORT=${PORT}
