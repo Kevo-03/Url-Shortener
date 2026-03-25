@@ -1,5 +1,5 @@
 import * as dotenv from 'dotenv';
-dotenv.config({ path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env.development' });
+dotenv.config({ path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env' });
 
 function toNumber(val: string | undefined, fallback: number): number {
     const n = Number(val);
@@ -10,12 +10,7 @@ export const ENV_VAR = {
     PORT: process.env.PORT,
     VERSION: process.env.npm_package_version,
     // ───────── Redis ─────────
-    REDIS_HOST: process.env.REDIS_HOST,
-    REDIS_PORT: process.env.REDIS_PORT,
-    REDIS_DB: process.env.REDIS_DB,
-    REDIS_PASS: process.env.REDIS_PASSWORD,      // may be undefined
-    REDIS_TLS: process.env.REDIS_TLS === 'true',
-    REDIS_URI: process.env.REDIS_URI,            // [NEW] for Docker/Cloud
+    REDIS_URI: process.env.REDIS_URI,
 
     // ───────── App settings ─────────
     DEFAULT_TTL: toNumber(process.env.DEFAULT_TTL, 60 * 60 * 24 * 30),  // 30 days
