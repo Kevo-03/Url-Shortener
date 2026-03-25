@@ -1,5 +1,10 @@
 # URL Shortener Service
 
+[![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)](https://nodejs.org/)
+[![NestJS](https://img.shields.io/badge/nestjs-%23E0234E.svg?style=for-the-badge&logo=nestjs&logoColor=white)](https://nestjs.com/)
+[![TypeScript](https://img.shields.io/badge/typescript-%23007ACC.svg?style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=for-the-badge&logo=redis&logoColor=white)](https://redis.io/)
+
 A URL shortening service built with **NestJS** and **Redis**. It allows users to shorten long URLs and redirect using short codes. It offers a **public web interface** for easy use and supports optional expiry.
 
 You can try it out at <https://url-shortener-muph.onrender.com/>, since it is deployed on render.com with free tier it can take 50 seconds to start up at your first request.
