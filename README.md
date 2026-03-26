@@ -7,7 +7,7 @@
 
 A URL shortening service built with **NestJS** and **Redis**. It allows users to shorten long URLs and redirect using short codes. It offers a **public web interface** for easy use and supports optional expiry.
 
-You can try it out at <https://url-shortener-muph.onrender.com/>, since it is deployed on render.com with free tier it can take 50 seconds to start up at your first request.
+You can try it out at <https://s.kivanct.me>, since it is deployed on render.com with free tier it can take 50 seconds to start up at your first request.
 ## Features
 
 - **Public Web Interface** for easy URL shortening
