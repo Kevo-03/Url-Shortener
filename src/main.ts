@@ -9,6 +9,6 @@ async function bootstrap() {
     type: VersioningType.URI,
   });
 
-  await app.listen(ENV_VAR.PORT || '3000');
+  await app.listen(ENV_VAR.PORT || 3000);
 }
 bootstrap();
